@@ -2,16 +2,28 @@ package sigs.api.model;
 
 
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import java.util.HashSet;
+import java.util.Set;
 
 public class  UserDTO {
     private String username;
     private String password;
 
    // private Role role;
-   @ManyToOne
+  /* @ManyToOne
    @JoinColumn(name = "role_id")
    private Role role;
+*/
+
+    @ManyToMany
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> assignedRoles = new HashSet<>();
 
 
 
@@ -59,7 +71,7 @@ public class  UserDTO {
 
 
 
-    public Role getRole() {
+ /*   public Role getRole() {
         return role;
     }
 
@@ -67,7 +79,17 @@ public class  UserDTO {
         this.role = role;
     }
 
+*/
 
+
+
+    public Set<Role> getAssignedRoles() {
+        return assignedRoles;
+    }
+
+    public void setAssignedRoles(Set<Role> assignedRoles) {
+        this.assignedRoles = assignedRoles;
+    }
 
 
 

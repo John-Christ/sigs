@@ -33,7 +33,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
-        String role = String.valueOf(user.getRole());
+        String role = String.valueOf(user.getAssignedRoles());
         roles = Arrays.asList(new SimpleGrantedAuthority(role));
         return new org.springframework.security.core.userdetails.User
                 (user.getUsername(), user.getPassword(), roles);
@@ -53,7 +53,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         DAOUser newUser = new DAOUser();
         newUser.setUsername(user.getUsername());
         newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
-        newUser.setRole(user.getRole());
+        newUser.setAssignedRoles(user.getAssignedRoles());
         newUser.setNom(user.getNom());
         newUser.setPrenom(user.getPrenom());
         newUser.setEmail(user.getEmail());

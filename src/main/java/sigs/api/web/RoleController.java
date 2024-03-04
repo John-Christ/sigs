@@ -47,17 +47,17 @@ public class RoleController
 
     // Single item
 
-    @GetMapping("/role/{id}")
-    Role one(@PathVariable Long id) {
+    @GetMapping("/role/{roleId}")
+    Role one(@PathVariable Long roleId) {
 
-        return repository.findById(id)
-                .orElseThrow(() -> new RestApiNotFoundException(id));
+        return repository.findById(roleId)
+                .orElseThrow(() -> new RestApiNotFoundException(roleId));
     }
 
-    @PutMapping("/role-update/{id}")
-    Role replaceRole(@RequestBody Role newRole, @PathVariable Long id) {
+    @PutMapping("/role-update/{roleId}")
+    Role replaceRole(@RequestBody Role newRole, @PathVariable Long roleId) {
 
-        return repository.findById(id)
+        return repository.findById(roleId)
                 .map(role -> {
                     role.setLabel(newRole.getLabel());
                     role.setStatut(newRole.getStatut());
@@ -67,14 +67,14 @@ public class RoleController
                     return repository.save(role);
                 })
                 .orElseGet(() -> {
-                    newRole.setId(id);
+                    newRole.setRoleId(roleId);
                     return repository.save(newRole);
                 });
     }
 
-    @DeleteMapping("/role-delete/{id}")
-    void deleteRole(@PathVariable Long id) {
-        repository.deleteById(id);
+    @DeleteMapping("/role-delete/{roleId}")
+    void deleteRole(@PathVariable Long roleId) {
+        repository.deleteById(roleId);
     }
 
 

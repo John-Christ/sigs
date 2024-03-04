@@ -37,6 +37,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // configure AuthenticationManager so that it knows from where to load
         // user for matching credentials
         // Use BCryptPasswordEncoder
+
+        auth.inMemoryAuthentication()
+                .withUser("user").password("{noop}password").roles("USER")
+                .and()
+                .withUser("admin").password("{noop}password").roles("ADMIN");
+
+
         auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
     }
 
@@ -78,7 +85,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // Here starts Users and Admin permissions
                 .antMatchers("/employees", "/update/{id}").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/users", "/user/{id}").hasAnyRole("USER", "ADMIN")
+               // .antMatchers("/users", "/user/{id}").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/produits", "/produit/{id}").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/fournisseurs", "/fournisseur/{id}").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/demandes", "/demande/{id}").hasAnyRole("USER", "ADMIN")
@@ -89,11 +96,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/mouvement-stocks", "/mouvement-stock/{id}").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/compte-fournisseurs", "/compte-fournisseur/{id}").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/categories", "/categorie/{id}").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/sous-categories", "/sous-categorie/{id}", "/profile").hasAnyRole("USER", "ADMIN")
-
+                .antMatchers("/sous-categories", "/sous-categorie/{id}").hasAnyRole("USER", "ADMIN")
+//, "/profile"
 
                 // Only for supreme admin
-                .antMatchers("/authenticate", "/register").permitAll().
+                .antMatchers("/authenticate", "/register", "/role-add", "/user/{id}/role/{roleId}", "/users", "/user/{id}", "/roles").permitAll().
                 // all other requests need to be authenticated
                         anyRequest().authenticated().and().
                 // make sure we use stateless session; session won't be used to
@@ -104,4 +111,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // Add a filter to validate the tokens with every request
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
+
+
+
+
+
+
 }

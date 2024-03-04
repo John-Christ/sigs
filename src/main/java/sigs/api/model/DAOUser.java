@@ -3,7 +3,11 @@ package sigs.api.model;
 
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "utilisateur")
@@ -15,22 +19,25 @@ public class DAOUser {
     @Column
     private String username;
     @Column
+    @JsonIgnore
     private String password;
 
 
    // @Column
     // private String role;
-   @ManyToOne
-   @JoinColumn(name = "role_id")
-   private Role role;
+  // @ManyToMany
+   //@JoinColumn(name = "role_id")
+  // private Role role;
+
+    @ManyToMany
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> assignedRoles = new HashSet<>();
 
 
 
-
-
-    @ManyToOne
-    @JoinColumn(name = "permission_id")
-    private Permission permission;
 
 
 
@@ -66,30 +73,17 @@ public class DAOUser {
     }
 
 
-   /* public String getRole() {
-        return role;
-    }
 
-    public void setRole(String role) {
-        this.role = role;
-    }
-*/
-   public Role getRole() {
-       return role;
+   public Set<Role> getAssignedRoles() {
+       return assignedRoles;
    }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setAssignedRoles(Set<Role> assignedRoles) {
+        this.assignedRoles = assignedRoles;
     }
 
 
-    public Permission getPermission() {
-        return permission;
-    }
 
-    public void setPermission(Permission permission) {
-        this.permission = permission;
-    }
 
 
 
@@ -151,8 +145,7 @@ public class DAOUser {
     @Override
     public String toString() {
         return "DAOUser [id=" + id + ", username=" + username +
-                ", password=" + password + ", role=" + role +
-                ", nom=" + nom + ", prenom=" + prenom +
+                ", password=" + password + ", nom=" + nom + ", prenom=" + prenom +
                 ", email=" + email + ", tel=" + tel + "]";
     }
 
